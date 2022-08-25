@@ -1,4 +1,4 @@
-package com.Carrot.Model;
+package com.Carrot.CR_Model;
 
 import lombok.Data;
 

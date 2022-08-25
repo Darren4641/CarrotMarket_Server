@@ -1,8 +1,8 @@
-package com.Carrot.Controller;
+package com.Carrot.CR_Controller;
 
 import com.Carrot.ErrorHandler.ApiResponse;
 import com.Carrot.Jwt.RefreshToken;
-import com.Carrot.Service.JwtService;
+import com.Carrot.CR_Service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

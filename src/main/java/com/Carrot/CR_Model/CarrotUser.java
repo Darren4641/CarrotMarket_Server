@@ -1,4 +1,4 @@
-package com.Carrot.Model;
+package com.Carrot.CR_Model;
 
 import com.Carrot.Role.Role;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.Carrot.Service;
+package com.Carrot.CR_Service;
 
 import com.Carrot.ErrorHandler.ApiResponse;
 import com.Carrot.ErrorHandler.AuthenticationCustomException;
@@ -6,7 +6,7 @@ import com.Carrot.ErrorHandler.ErrorCode;
 import com.Carrot.Jwt.JwtTokenProvider;
 import com.Carrot.Jwt.RefreshToken;
 import com.Carrot.Jwt.Token;
-import com.Carrot.Model.CarrotUser;
+import com.Carrot.CR_Model.CarrotUser;
 import com.Carrot.Repository.User.CarrotUserRepositoryImpl;
 import com.Carrot.Repository.RefreshToken.RefreshTokenRepository;
 import com.Carrot.Repository.User.CarrotUserRepository;

@@ -1,8 +1,8 @@
-package com.Carrot.Service;
+package com.Carrot.CR_Service;
 
 import com.Carrot.ErrorHandler.AuthenticationCustomException;
 import com.Carrot.ErrorHandler.ErrorCode;
-import com.Carrot.Model.CarrotUser;
+import com.Carrot.CR_Model.CarrotUser;
 import com.Carrot.Repository.User.CarrotUserRepository;
 import com.Carrot.Repository.User.CarrotUserRepositoryImpl;
 import org.springframework.security.core.userdetails.UserDetails;

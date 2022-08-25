@@ -1,7 +1,7 @@
 package com.Carrot.Repository.User;
 
 import com.Carrot.Role.Role;
-import com.Carrot.Model.CarrotUser;
+import com.Carrot.CR_Model.CarrotUser;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

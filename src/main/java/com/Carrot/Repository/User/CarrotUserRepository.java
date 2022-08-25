@@ -1,6 +1,6 @@
 package com.Carrot.Repository.User;
 
-import com.Carrot.Model.CarrotUser;
+import com.Carrot.CR_Model.CarrotUser;
 
 import java.util.List;
 import java.util.Optional;

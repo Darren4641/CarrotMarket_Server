@@ -1,10 +1,10 @@
-package com.Carrot.Controller;
+package com.Carrot.CR_Controller;
 
 import com.Carrot.ErrorHandler.ApiResponse;
 import com.Carrot.Role.Role;
-import com.Carrot.Service.JwtService;
-import com.Carrot.Service.UserService;
-import com.Carrot.Model.CarrotUser;
+import com.Carrot.CR_Service.JwtService;
+import com.Carrot.CR_Service.UserService;
+import com.Carrot.CR_Model.CarrotUser;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;

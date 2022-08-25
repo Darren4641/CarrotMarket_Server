@@ -1,17 +1,15 @@
-package com.Carrot.Model;
+package com.Carrot.CR_Model;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class Reply {
-    private Long replyId;
+public class Comment {
     private Long commId;
     private Long postId;
     private String id;
-    private String comm_id;
-    private String reply_id;
+    private String comm_Id;
     private String content;
     private Date createDate;
     private int love;
