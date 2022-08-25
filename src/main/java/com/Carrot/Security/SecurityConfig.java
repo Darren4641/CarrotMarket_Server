@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .authorizeRequests()// 요청에 대한 사용권한 체크
                 .antMatchers("/users/test").authenticated()
                 .antMatchers("/write").authenticated()
+                .antMatchers("/product/p1/**").authenticated()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/users/v1/**").hasRole("USER")
                 .antMatchers("/**").permitAll()
