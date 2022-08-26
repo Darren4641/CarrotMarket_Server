@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class ChatList {
-    private Long chatId;
-    private Long id;
-    private Long partner;
-    private Long postId;
+    private int chatId;
+    private String id;
+    private String partner;
+    private int postId;
 }

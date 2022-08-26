@@ -59,7 +59,7 @@ public class CarrotUserRepositoryImpl implements CarrotUserRepository{
                                 rs.getString("password"),
                                 rs.getString("phone"),
                                 rs.getString("nickName"),
-                                rs.getDouble("temperature"),
+                                rs.getLong("temperature"),
                                 rs.getString("image"),
                                 Role.from(rs.getString("role"))
                         )
@@ -77,7 +77,7 @@ public class CarrotUserRepositoryImpl implements CarrotUserRepository{
                                 rs.getString("password"),
                                 rs.getString("phone"),
                                 rs.getString("nickName"),
-                                rs.getDouble("temperature"),
+                                rs.getLong("temperature"),
                                 rs.getString("image"),
                                 Role.from(rs.getString("role"))
                         ))
@@ -94,7 +94,7 @@ public class CarrotUserRepositoryImpl implements CarrotUserRepository{
                                 rs.getString("password"),
                                 rs.getString("phone"),
                                 rs.getString("nickName"),
-                                rs.getDouble("temperature"),
+                                rs.getInt("temperature"),
                                 rs.getString("image"),
                                 Role.from(rs.getString("role"))
                         )

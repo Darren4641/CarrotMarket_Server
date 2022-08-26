@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface SaleProductRepository {
     Double save(SaleProduct saleProduct);
-    int update(Double postId, SaleProduct saleProduct);
+    int update(int postId, SaleProduct saleProduct);
     List<SaleProduct> findAll();
     Optional<SaleProduct> findById(Double postId);
     List<SaleProduct> findByTitleOrContent(String title);

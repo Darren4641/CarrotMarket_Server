@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 public class RefreshToken {
 
-    private Double refreshTokenId;
+    private int refreshTokenId;
 
     private String refreshToken;
 

@@ -29,7 +29,7 @@ public class CarrotUserController {
                 .password(passwordEncoder.encode(user.get("password")))
                 .phone(user.get("phone"))
                 .nickName(user.get("nickName"))
-                .temperature(Double.parseDouble(user.get("temperature")))
+                .temperature(Long.parseLong(user.get("temperature")))
                 .image(user.get("image"))
                 .role(role)
                 .build();

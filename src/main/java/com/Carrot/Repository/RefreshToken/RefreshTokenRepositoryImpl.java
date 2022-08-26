@@ -31,7 +31,7 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository{
                 new Object[]{refreshToken},
                 (rs, rowNum) ->
                         Optional.of(new RefreshToken(
-                                rs.getDouble("refreshTokenId"),
+                                rs.getInt("refreshTokenId"),
                                 rs.getString("refreshToken"),
                                 rs.getString("keyId"),
                                 rs.getString("userAgent")
@@ -47,7 +47,7 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository{
                     new Object[]{userId, userAgent},
                     (rs, rowNum) ->
                             Optional.of(new RefreshToken(
-                                    rs.getDouble("refreshTokenId"),
+                                    rs.getInt("refreshTokenId"),
                                     rs.getString("refreshToken"),
                                     rs.getString("keyId"),
                                     rs.getString("userAgent")

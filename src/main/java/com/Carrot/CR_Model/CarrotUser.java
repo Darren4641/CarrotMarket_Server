@@ -17,7 +17,7 @@ public class CarrotUser implements UserDetails {
     private String password;
     private String phone;
     private String nickName;
-    private double temperature;
+    private long temperature;
     private String image;
     private Role role;
 

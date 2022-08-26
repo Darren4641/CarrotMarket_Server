@@ -25,16 +25,15 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
         KeyHolder keyHolder = new GeneratedKeyHolder();
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO `saleProduct` (`id`, `title`, `category`, `price`, `content`, `image`, `status`, `createDate`, `updateDate`, `love`)\n" +
-                    "VALUES (?,?,?,?,?,?,?,?,?,0)", new String[]{"postId"});
+                    "VALUES (?,?,?,?,?,?,?,?,0)", new String[]{"postId"});
             preparedStatement.setString(1, saleProduct.getId());
             preparedStatement.setString(2, saleProduct.getTitle());
             preparedStatement.setString(3, saleProduct.getCategory());
             preparedStatement.setInt(4, saleProduct.getPrice());
             preparedStatement.setString(5, saleProduct.getContent());
-            preparedStatement.setString(6, saleProduct.getImage());
-            preparedStatement.setString(7, saleProduct.getStatus());
+            preparedStatement.setString(6, saleProduct.getStatus());
+            preparedStatement.setTimestamp(7, getTime());
             preparedStatement.setTimestamp(8, getTime());
-            preparedStatement.setTimestamp(9, getTime());
 
             return preparedStatement;
         };
@@ -43,14 +42,13 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
     }
 
     @Override
-    public int update(Double postId, SaleProduct saleProduct) {
-        return jdbcTemplate.update("UPDATE `saleProduct` SET `id` = ?, `title` = ?, `category` = ?, `price` = ?, `content` = ?, `image` = ?, `status` = ?, `createDate` = ?, `updateDate` = ?, `love` = ? WHERE `postId` = ?",
+    public int update(int postId, SaleProduct saleProduct) {
+        return jdbcTemplate.update("UPDATE `saleProduct` SET `id` = ?, `title` = ?, `category` = ?, `price` = ?, `content` = ?, `status` = ?, `createDate` = ?, `updateDate` = ?, `love` = ? WHERE `postId` = ?",
                 saleProduct.getId(),
                 saleProduct.getTitle(),
                 saleProduct.getCategory(),
                 saleProduct.getPrice(),
                 saleProduct.getContent(),
-                saleProduct.getImage(),
                 saleProduct.getStatus(),
                 saleProduct.getCreateDate(),
                 saleProduct.getUpdateDate(),
@@ -64,13 +62,12 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
                 "SELECT * FROM `saleProduct`",
                 (rs, rowNum) ->
                         new SaleProduct(
-                                rs.getDouble("postId"),
+                                rs.getInt("postId"),
                                 rs.getString("id"),
                                 rs.getString("title"),
                                 rs.getString("category"),
                                 rs.getInt("price"),
                                 rs.getString("content"),
-                                rs.getString("image"),
                                 rs.getString("status"),
                                 rs.getTimestamp("createDate"),
                                 rs.getTimestamp("updateDate"),
@@ -87,13 +84,12 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
                     @Override
                     public SaleProduct mapRow(ResultSet rs, int rowNum) throws SQLException {
                         SaleProduct saleProduct = new SaleProduct(
-                                rs.getDouble("postId"),
+                                rs.getInt("postId"),
                                 rs.getString("id"),
                                 rs.getString("title"),
                                 rs.getString("category"),
                                 rs.getInt("price"),
                                 rs.getString("content"),
-                                rs.getString("image"),
                                 rs.getString("status"),
                                 rs.getTimestamp("createDate"),
                                 rs.getTimestamp("updateDate"),
@@ -111,13 +107,12 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
                 new Object[]{postId},
                 (rs, rowNum) ->
                         Optional.of(new SaleProduct(
-                                rs.getDouble("postId"),
+                                rs.getInt("postId"),
                                 rs.getString("id"),
                                 rs.getString("title"),
                                 rs.getString("category"),
                                 rs.getInt("price"),
                                 rs.getString("content"),
-                                rs.getString("image"),
                                 rs.getString("status"),
                                 rs.getTimestamp("createDate"),
                                 rs.getTimestamp("updateDate"),

@@ -2,13 +2,14 @@ package com.Carrot.CR_Model;
 
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Data
 public class ChatLog {
-    private Long chatId;
+    private int chatId;
     private String sender;
     private String receiver;
     private String conversation;
-    private Date senDate;
+    private Timestamp senDate;
 }

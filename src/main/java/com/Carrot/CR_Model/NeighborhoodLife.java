@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class NeighborhoodLife {
-    private Long postId;
+    private int postId;
     private String id;
     private String category;
     private String content;
