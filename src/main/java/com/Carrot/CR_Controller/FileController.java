@@ -26,59 +26,26 @@ public class FileController {
     private FileUploadDownloadService fileUploadDownloadService;
 
     @PostMapping("/uploadFile")
-    public Photo_SaleProduct uploadFile(@RequestParam("file") MultipartFile file) {
-        String originFileName = file.getOriginalFilename();
-
-        String filePath = fileUploadDownloadService.storeFile(file);
-
-        File fileFullPath = new File(filePath);
-        long bytes = (fileFullPath.length() / 1024);
-
-        String uuidFileName = fileFullPath.getName();
-
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/downloadFile/")
-                .path(uuidFileName)
-                .toUriString();
-
-        return Photo_SaleProduct.builder()
-                .category("saleProduct")
-                .postId(1)
-                .id("zxz4641")
-                .fileName(originFileName)
-                .filePath(filePath)
-                .fileDownloadPath(fileDownloadUri)
-                .fileSize(bytes).build();
+    public Photo_SaleProduct uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("id") String id, @RequestParam("postId") int postId) {
+        return fileUploadDownloadService.storeFile(file, "saleProduct", id, postId);
     }
 
     @PostMapping("/uploadMultipleFiles")
-    public List<Photo_SaleProduct> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
+    public List<Photo_SaleProduct> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files, @RequestParam("id") String id, @RequestParam("postId") int postId) {
         return Arrays.asList(files)
                 .stream()
-                .map(file -> uploadFile(file))
+                .map(file -> uploadFile(file, id, postId))
                 .collect(Collectors.toList());
 
     }
 
 
     @GetMapping("/downloadFile/{fileName:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
-        Resource resource = fileUploadDownloadService.loadFileAsResource(fileName);
-        String contentType = null;
-        try {
-            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public ResponseEntity<Resource> downloadFile(HttpServletRequest request, @PathVariable String fileName) {
+        return fileUploadDownloadService.loadFileAsResource(request, fileName);
 
-        if(contentType == null) {
-            System.out.println("ContentType is Null");
-            contentType = "application/octet-stream";
-        }
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
+
+
     }
 
 

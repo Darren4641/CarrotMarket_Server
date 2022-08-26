@@ -21,10 +21,10 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Double save(SaleProduct saleProduct) {
+    public long save(SaleProduct saleProduct) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO `saleProduct` (`id`, `title`, `category`, `price`, `content`, `image`, `status`, `createDate`, `updateDate`, `love`)\n" +
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO `saleProduct` (`id`, `title`, `category`, `price`, `content`, `status`, `createDate`, `updateDate`, `love`)" +
                     "VALUES (?,?,?,?,?,?,?,?,0)", new String[]{"postId"});
             preparedStatement.setString(1, saleProduct.getId());
             preparedStatement.setString(2, saleProduct.getTitle());
@@ -38,7 +38,7 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
             return preparedStatement;
         };
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
-        return keyHolder.getKey().doubleValue();
+        return keyHolder.getKey().longValue();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
     }
 
     @Override
-    public Optional<SaleProduct> findById(Double postId) {
+    public Optional<SaleProduct> findById(long postId) {
         return jdbcTemplate.queryForObject(
                 "SELECT * FROM `saleProduct` WHERE `postId` = ?",
                 new Object[]{postId},

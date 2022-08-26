@@ -33,32 +33,9 @@ public class SaleProductService {
         this.saleProductRepository = saleProductRepository;
     }
 
-    /*public String saveFile(MultipartFile multipartFile) {
-            String fileName = multipartFile.getOriginalFilename();
-            Path location = this.dirLocation.resolve(fileName);
-            try {
-            Files.copy(multipartFile.getInputStream(), location, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return fileName;
-    }
-
-    public Resource loadFile(String fileName) throws FileNotFoundException {
-        try {
-            Path file = this.dirLocation.resolve(fileName).normalize();
-            Resource resource = new UrlResource(file.toUri());
-            if(resource.exists() || resource.isReadable())
-                return resource;
-        } catch(MalformedURLException e) {
-            throw new FileNotFoundException("Could not download file");
-        }
-        return null;
-    }*/
-
     public SaleProduct write(SaleProduct saleProduct) {
 
-        Double status = saleProductRepository.save(saleProduct);
+        long status = saleProductRepository.save(saleProduct);
         return saleProductRepository.findById(status).get();
     }
 

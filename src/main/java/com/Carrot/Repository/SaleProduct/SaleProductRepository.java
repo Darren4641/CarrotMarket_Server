@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SaleProductRepository {
-    Double save(SaleProduct saleProduct);
+    long save(SaleProduct saleProduct);
     int update(int postId, SaleProduct saleProduct);
     List<SaleProduct> findAll();
-    Optional<SaleProduct> findById(Double postId);
+    Optional<SaleProduct> findById(long postId);
     List<SaleProduct> findByTitleOrContent(String title);
     List<SaleProduct> findPageCount(int limit, int offset);
 }

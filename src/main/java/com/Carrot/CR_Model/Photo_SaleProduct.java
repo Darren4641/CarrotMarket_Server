@@ -13,6 +13,7 @@ public class Photo_SaleProduct {
     private int postId;
     private String id;
     private String fileName;
+    private String uuid;
     private String filePath;
     private String fileDownloadPath;
     private long fileSize;
