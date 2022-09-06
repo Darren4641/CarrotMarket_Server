@@ -1,7 +1,10 @@
 package com.Carrot.CR_Service;
 
+import com.Carrot.CR_Model.Photo_SaleProduct;
 import com.Carrot.CR_Model.SaleProduct;
 import com.Carrot.ErrorHandler.ApiResponse;
+import com.Carrot.Repository.PhotoRepository.PhotoRepository;
+import com.Carrot.Repository.PhotoRepository.PhotoRepositoryImpl;
 import com.Carrot.Repository.SaleProduct.SaleProductRepository;
 import com.Carrot.Repository.SaleProduct.SaleProductRepositoryImpl;
 import com.File.FileUploadProperties;
@@ -23,15 +26,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SaleProductService {
 
     private final SaleProductRepository saleProductRepository;
-
-    //@Autowired
-    public SaleProductService(SaleProductRepositoryImpl saleProductRepository, FileUploadProperties fileUploadProperties) {
+    private final PhotoRepository photoRepository;
+    @Autowired
+    public SaleProductService(SaleProductRepositoryImpl saleProductRepository, PhotoRepositoryImpl photoRepository) {
         this.saleProductRepository = saleProductRepository;
+        this.photoRepository = photoRepository;
     }
 
     public SaleProduct write(SaleProduct saleProduct) {
@@ -47,7 +52,12 @@ public class SaleProductService {
 
     public ApiResponse findById(int postId) {
         ApiResponse.ResponseMap result = new ApiResponse.ResponseMap();
-        result.setResult(saleProductRepository.findByIdJoinPhoto(postId));
+        Optional<SaleProduct> Op_saleProduct = saleProductRepository.findById(postId);
+        if(Op_saleProduct.isPresent()) {
+            SaleProduct saleProduct = Op_saleProduct.get();
+            saleProduct.setFile(photoRepository.findByPostId(postId));
+            result.setResult(saleProduct);
+        }
         return result;
     }
 

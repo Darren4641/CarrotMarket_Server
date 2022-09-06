@@ -26,10 +26,13 @@ public class FileController {
 
     @PostMapping("/uploadMultipleFiles")
     public List<Photo_SaleProduct> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files, @RequestParam("id") String id, @RequestParam("postId") int postId) {
-        return Arrays.asList(files)
+        List<Photo_SaleProduct> photo_saleProductList =  Arrays.asList(files)
                 .stream()
                 .map(file -> uploadFile(file, id, postId))
                 .collect(Collectors.toList());
+
+        return photo_saleProductList;
+
     }
 
 

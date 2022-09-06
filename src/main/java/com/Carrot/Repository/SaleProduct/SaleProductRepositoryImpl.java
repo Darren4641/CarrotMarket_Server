@@ -81,7 +81,10 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
     @Override
     public List<SaleProduct> findPageCount(int limit, int offset) {
         List<SaleProduct> results = jdbcTemplate.query(
-                "SELECT * from saleProduct AS sale JOIN Photo AS photo ON sale.postId = photo.postId ORDER BY sale.updateDate DESC LIMIT ? OFFSET ?",
+                "SELECT distinct sale.postId, sale.id, sale.title, sale.category, sale.price, sale.price, sale.content, sale.`status`, sale.createDate, sale.updateDate, sale.love, photo.filePath, photo.fileDownloadPath " +
+                        "from saleProduct AS sale JOIN Photo AS photo ON sale.postId = photo.postId " +
+                        "GROUP BY sale.postId " +
+                        "ORDER BY updateDate DESC LIMIT ? OFFSET ?",
                 new RowMapper<SaleProduct>() {
                     @Override
                     public SaleProduct mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -130,7 +133,7 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
     @Override
     public Optional<SaleProduct> findByIdJoinPhoto(long postId) {
         return jdbcTemplate.queryForObject(
-                "SELECT * from saleProduct AS sale JOIN Photo AS photo ON sale.postId = photo.postId WHERE sale.postId = ?",
+                "SELECT * from saleProduct AS sale JOIN Photo AS photo ON sale.postId = photo.postId WHERE sale.postId = ? LIMIT 1",
                 new Object[]{postId},
                 (rs, rowNum) ->
                         Optional.of(new SaleProduct(

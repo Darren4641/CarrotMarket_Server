@@ -5,11 +5,15 @@ import com.Carrot.CR_Model.SaleProduct;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -54,12 +58,13 @@ public class PhotoRepositoryImpl implements PhotoRepository{
     }
 
     @Override
-    public Optional<Photo_SaleProduct> findByPostId(long postId) {
-        return jdbcTemplate.queryForObject(
+    public List<Photo_SaleProduct> findByPostId(long postId) {
+        List<Photo_SaleProduct> results = jdbcTemplate.query(
                 "SELECT * FROM `Photo` WHERE `postId` = ?",
-                new Object[]{postId},
-                (rs, rowNum) ->
-                        Optional.of(new Photo_SaleProduct(
+                new RowMapper<Photo_SaleProduct>() {
+                    @Override
+                    public Photo_SaleProduct mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        Photo_SaleProduct photo_saleProduct = new Photo_SaleProduct(
                                 rs.getString("category"),
                                 rs.getInt("postId"),
                                 rs.getString("id"),
@@ -67,9 +72,11 @@ public class PhotoRepositoryImpl implements PhotoRepository{
                                 rs.getString("uuid"),
                                 rs.getString("filePath"),
                                 rs.getString("fileDownloadPath"),
-                                rs.getLong("fileSize")
-                        ))
-        );
+                                rs.getLong("fileSize"));
+                        return photo_saleProduct;
+                    }
+                }, postId);
+        return results.isEmpty() ? null : results;
     }
 
     @Override

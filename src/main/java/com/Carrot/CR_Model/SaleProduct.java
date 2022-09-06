@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.sql.Timestamp;
-import java.util.Date;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -23,4 +23,20 @@ public class SaleProduct {
     private int love;
     private String filePath;
     private String fileDownloadPath;
+    private List<Photo_SaleProduct> file;
+
+    public SaleProduct(int postId, String id, String title, String category, int price, String content, String status, Timestamp createDate, Timestamp updateDate, int love, String filePath, String fileDownloadPath) {
+        this.postId = postId;
+        this.id = id;
+        this.title = title;
+        this.category = category;
+        this.price = price;
+        this.content = content;
+        this.status = status;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
+        this.love = love;
+        this.filePath = filePath;
+        this.fileDownloadPath = fileDownloadPath;
+    }
 }
