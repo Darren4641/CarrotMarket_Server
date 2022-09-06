@@ -21,4 +21,6 @@ public class SaleProduct {
     private Timestamp createDate;
     private Timestamp updateDate;
     private int love;
+    private String filePath;
+    private String fileDownloadPath;
 }

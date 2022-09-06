@@ -1,24 +1,16 @@
 package com.Carrot.CR_Controller;
 
 import com.Carrot.CR_Model.SaleProduct;
-import com.Carrot.CR_Service.JwtService;
+import com.Carrot.CR_Service.FileUploadDownloadService;
 import com.Carrot.CR_Service.SaleProductService;
+import com.Carrot.ErrorHandler.ApiResponse;
 import com.Carrot.Jwt.JwtTokenProvider;
-import io.jsonwebtoken.Jwt;
-import lombok.AllArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -29,10 +21,13 @@ public class SaleProductController{
 
     private final SaleProductService saleProductService;
     private final JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private final FileUploadDownloadService fileUploadDownloadService;
 
-    public SaleProductController(SaleProductService saleProductService, JwtTokenProvider jwtTokenProvider) {
+    public SaleProductController(SaleProductService saleProductService, JwtTokenProvider jwtTokenProvider, FileUploadDownloadService fileUploadDownloadService) {
         this.saleProductService = saleProductService;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.fileUploadDownloadService = fileUploadDownloadService;
     }
 
     public String getUserInfo(HttpServletRequest request) {
@@ -40,11 +35,12 @@ public class SaleProductController{
         return jwtTokenProvider.getUserPk(token);
     }
 
-    @PostMapping("/p1/write")
-    public SaleProduct write(HttpServletRequest request, @RequestBody Map<String, String> post, MultipartFile file) {
+    @PostMapping(value = "/p1/write", consumes = { MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public ApiResponse write(HttpServletRequest request, @RequestPart Map<String, String> post, @RequestPart(required = false) MultipartFile file) {
+        String id = getUserInfo(request);
 
         SaleProduct saleProduct = SaleProduct.builder()
-                .id(getUserInfo(request))
+                .id(id)
                 .title(post.get("title"))
                 .category(post.get("category"))
                 .price(Integer.parseInt(post.get("price")))
@@ -52,24 +48,11 @@ public class SaleProductController{
                 .status(post.get("status"))
                 .love(0).build();
 
-        return saleProductService.write(saleProduct);
-    }
+        SaleProduct sale = saleProductService.write(saleProduct);
+        fileUploadDownloadService.storeFile(file, "saleProduct", id, sale.getPostId());
 
-    /*@GetMapping("/download/{file}")
-    public ResponseEntity<?> downloadFile(HttpServletRequest request, @PathVariable(name = "file") String fileName) {
-        String contentType = null;
-        Resource resource = null;
-        try {
-            resource = saleProductService.loadFile(fileName);
-            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
-    }*/
+        return saleProductService.findById(sale.getPostId());
+    }
 
     @PostMapping("/p1/update")
     public SaleProduct update(HttpServletRequest request, @RequestBody Map<String, String> post) {
@@ -84,11 +67,11 @@ public class SaleProductController{
     }
 
     @GetMapping("/list/{page}")
-    public List<SaleProduct> show(@PathVariable(name = "page") int pageNum) {
+    public ApiResponse show(@PathVariable(name = "page") int pageNum) {
         //무한 스크롤
         int limit = getLimitCnt(pageNum);
         int offset = limit - 10;
-        return saleProductService.getPage(limit, offset);
+        return saleProductService.getPage(limit, offset, pageNum);
 
     }
 

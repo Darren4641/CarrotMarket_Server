@@ -1,6 +1,7 @@
 package com.Carrot.CR_Service;
 
 import com.Carrot.CR_Model.SaleProduct;
+import com.Carrot.ErrorHandler.ApiResponse;
 import com.Carrot.Repository.SaleProduct.SaleProductRepository;
 import com.Carrot.Repository.SaleProduct.SaleProductRepositoryImpl;
 import com.File.FileUploadProperties;
@@ -34,7 +35,6 @@ public class SaleProductService {
     }
 
     public SaleProduct write(SaleProduct saleProduct) {
-
         long status = saleProductRepository.save(saleProduct);
         return saleProductRepository.findById(status).get();
     }
@@ -45,8 +45,17 @@ public class SaleProductService {
         return result ? saleProduct : null;
     }
 
-    public List<SaleProduct> getPage(int limit, int offset) {
-        return saleProductRepository.findPageCount(limit, offset);
+    public ApiResponse findById(int postId) {
+        ApiResponse.ResponseMap result = new ApiResponse.ResponseMap();
+        result.setResult(saleProductRepository.findByIdJoinPhoto(postId));
+        return result;
+    }
+
+    public ApiResponse getPage(int limit, int offset, int pageNum) {
+        ApiResponse.ResponseMap result = new ApiResponse.ResponseMap();
+        result.setResponseData("page", pageNum);
+        result.setResponseData("saleProductList", saleProductRepository.findPageCount(limit, offset));
+        return result;
     }
 
 }

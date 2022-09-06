@@ -22,7 +22,7 @@ public class CarrotUserController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/join")
-    public CarrotUser signUp(@RequestBody Map<String, String> user) {
+    public ApiResponse signUp(@RequestBody Map<String, String> user) {
         Role role = Role.from(user.get("role"));
         CarrotUser carrotUser = CarrotUser.builder()
                 .id(user.get("id"))
@@ -44,7 +44,7 @@ public class CarrotUserController {
     }
 
     @PostMapping("/find")
-    public CarrotUser findUser(@RequestBody Map<String, String> user) {
+    public ApiResponse findUser(@RequestBody Map<String, String> user) {
         return userService.find(user.get("id"));
     }
 

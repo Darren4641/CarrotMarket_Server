@@ -1,5 +1,6 @@
 package com.Carrot.CR_Service;
 
+import com.Carrot.ErrorHandler.ApiResponse;
 import com.Carrot.ErrorHandler.AuthenticationCustomException;
 import com.Carrot.ErrorHandler.ErrorCode;
 import com.Carrot.CR_Model.CarrotUser;
@@ -11,6 +12,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static com.Carrot.ErrorHandler.ErrorCode.PostNotFoundException;
+import static com.Carrot.ErrorHandler.ErrorCode.UsernameOrPasswordNotFoundException;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -31,14 +35,27 @@ public class UserService implements UserDetailsService {
         throw new AuthenticationCustomException(ErrorCode.UsernameOrPasswordNotFoundException);
     }
 
-    public CarrotUser signUp(CarrotUser carrotUser) {
-
+    public ApiResponse signUp(CarrotUser carrotUser) {
+        ApiResponse.ResponseMap result = new ApiResponse.ResponseMap();
         int status = carrotUserRepository.save(carrotUser);
-        System.out.println("status = " + status);
-        return carrotUser;
+        if(status != 0) {
+            result.setResult(carrotUser);
+        }
+        return result;
     }
 
-    public CarrotUser find(String id) {
-        return carrotUserRepository.findById(id).get();
+    public ApiResponse find(String id) {
+        ApiResponse.ResponseMap result = new ApiResponse.ResponseMap();
+        Optional<CarrotUser> carrotUser = carrotUserRepository.findById(id);
+        if(carrotUser.isPresent()) {
+            result.setResult(carrotUser.get());
+        }else {
+            result.setResponseData("code", UsernameOrPasswordNotFoundException.getCode());
+            result.setResponseData("message", UsernameOrPasswordNotFoundException.getMessage());
+            result.setResponseData("HttpStatus", UsernameOrPasswordNotFoundException.getStatus());
+        }
+
+
+        return result;
     }
 }

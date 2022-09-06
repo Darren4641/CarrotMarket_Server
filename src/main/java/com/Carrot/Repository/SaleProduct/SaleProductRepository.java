@@ -10,6 +10,7 @@ public interface SaleProductRepository {
     int update(int postId, SaleProduct saleProduct);
     List<SaleProduct> findAll();
     Optional<SaleProduct> findById(long postId);
+    Optional<SaleProduct> findByIdJoinPhoto(long postId);
     List<SaleProduct> findByTitleOrContent(String title);
     List<SaleProduct> findPageCount(int limit, int offset);
 }

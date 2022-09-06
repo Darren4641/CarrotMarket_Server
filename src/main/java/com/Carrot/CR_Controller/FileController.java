@@ -4,19 +4,13 @@ import com.Carrot.CR_Model.Photo_SaleProduct;
 import com.Carrot.CR_Service.FileUploadDownloadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,7 +30,6 @@ public class FileController {
                 .stream()
                 .map(file -> uploadFile(file, id, postId))
                 .collect(Collectors.toList());
-
     }
 
 

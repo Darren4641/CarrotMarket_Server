@@ -9,6 +9,8 @@ public enum ErrorCode {
     UNAUTHORIZEDException (401, "로그인 후 이용가능합니다.", HttpStatus.UNAUTHORIZED),
     ExpiredJwtException(444, "기존 토큰이 만료되었습니다. 해당 토큰을 가지고 /refresh 링크로 이동해주세요.", HttpStatus.UNAUTHORIZED),
     ReLogin(445, "모든 토큰이 만료되었습니다. 다시 로그인해주세요.", HttpStatus.UNAUTHORIZED),
+
+    PostNotFoundException(510, "해당 게시물이 없습니다.", HttpStatus.NOT_FOUND),
     ;
     @Getter
     private int code;

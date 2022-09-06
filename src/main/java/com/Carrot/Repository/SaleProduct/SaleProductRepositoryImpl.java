@@ -59,7 +59,7 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
     @Override
     public List<SaleProduct> findAll() {
         return jdbcTemplate.query(
-                "SELECT * FROM `saleProduct`",
+                "SELECT * from saleProduct AS sale JOIN Photo AS photo ON sale.postId = photo.postId ORDER BY sale.updateDate DESC",
                 (rs, rowNum) ->
                         new SaleProduct(
                                 rs.getInt("postId"),
@@ -71,7 +71,9 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
                                 rs.getString("status"),
                                 rs.getTimestamp("createDate"),
                                 rs.getTimestamp("updateDate"),
-                                rs.getInt("love")
+                                rs.getInt("love"),
+                                rs.getString("filePath"),
+                                rs.getString("fileDownloadPath")
                         )
         );
     }
@@ -79,7 +81,7 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
     @Override
     public List<SaleProduct> findPageCount(int limit, int offset) {
         List<SaleProduct> results = jdbcTemplate.query(
-                "SELECT * FROM saleProduct ORDER BY `updateDate` DESC LIMIT ? OFFSET ?",
+                "SELECT * from saleProduct AS sale JOIN Photo AS photo ON sale.postId = photo.postId ORDER BY sale.updateDate DESC LIMIT ? OFFSET ?",
                 new RowMapper<SaleProduct>() {
                     @Override
                     public SaleProduct mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -93,7 +95,9 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
                                 rs.getString("status"),
                                 rs.getTimestamp("createDate"),
                                 rs.getTimestamp("updateDate"),
-                                rs.getInt("love"));
+                                rs.getInt("love"),
+                                rs.getString("filePath"),
+                                rs.getString("fileDownloadPath"));
                                 return saleProduct;
                     }
                 }, limit, offset);
@@ -116,7 +120,32 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
                                 rs.getString("status"),
                                 rs.getTimestamp("createDate"),
                                 rs.getTimestamp("updateDate"),
-                                rs.getInt("love")
+                                rs.getInt("love"),
+                                null,
+                                null
+                        ))
+        );
+    }
+
+    @Override
+    public Optional<SaleProduct> findByIdJoinPhoto(long postId) {
+        return jdbcTemplate.queryForObject(
+                "SELECT * from saleProduct AS sale JOIN Photo AS photo ON sale.postId = photo.postId WHERE sale.postId = ?",
+                new Object[]{postId},
+                (rs, rowNum) ->
+                        Optional.of(new SaleProduct(
+                                rs.getInt("postId"),
+                                rs.getString("id"),
+                                rs.getString("title"),
+                                rs.getString("category"),
+                                rs.getInt("price"),
+                                rs.getString("content"),
+                                rs.getString("status"),
+                                rs.getTimestamp("createDate"),
+                                rs.getTimestamp("updateDate"),
+                                rs.getInt("love"),
+                                rs.getString("filePath"),
+                                rs.getString("fileDownloadPath")
                         ))
         );
     }
