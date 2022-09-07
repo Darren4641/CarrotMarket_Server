@@ -43,10 +43,9 @@ public class PhotoRepositoryImpl implements PhotoRepository{
     }
 
     @Override
-    public int update(int photoId, Photo_SaleProduct photo_saleProduct) {
+    public int update(int photoId, String category, Photo_SaleProduct photo_saleProduct) {
 
-        return jdbcTemplate.update("UPDATE `carrotsql`.`Photo` SET `category` = ?,`postId` = ?,`id` = ?,`fileName` = ?,`uuid` = ?, `filePath` = ?,`fileDownloadPath` = ?, `fileSize` = ? WHERE `photoId` = ?",
-                photo_saleProduct.getCategory(),
+        return jdbcTemplate.update("UPDATE `carrotsql`.`Photo` SET `postId` = ?,`id` = ?,`fileName` = ?,`uuid` = ?, `filePath` = ?,`fileDownloadPath` = ?, `fileSize` = ? WHERE `photoId` = ? AND `category` = ?",
                 photo_saleProduct.getPostId(),
                 photo_saleProduct.getId(),
                 photo_saleProduct.getFileName(),
@@ -54,13 +53,13 @@ public class PhotoRepositoryImpl implements PhotoRepository{
                 photo_saleProduct.getFilePath(),
                 photo_saleProduct.getFileDownloadPath(),
                 photo_saleProduct.getFileSize(),
-                photoId);
+                photoId, category);
     }
 
     @Override
-    public List<Photo_SaleProduct> findByPostId(long postId) {
+    public List<Photo_SaleProduct> findByPostIdAndCategory(long postId, String category) {
         List<Photo_SaleProduct> results = jdbcTemplate.query(
-                "SELECT * FROM `Photo` WHERE `postId` = ?",
+                "SELECT * FROM `Photo` WHERE `postId` = ? AND `category` = ? ",
                 new RowMapper<Photo_SaleProduct>() {
                     @Override
                     public Photo_SaleProduct mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -75,7 +74,7 @@ public class PhotoRepositoryImpl implements PhotoRepository{
                                 rs.getLong("fileSize"));
                         return photo_saleProduct;
                     }
-                }, postId);
+                }, postId, category);
         return results.isEmpty() ? null : results;
     }
 
@@ -96,5 +95,10 @@ public class PhotoRepositoryImpl implements PhotoRepository{
                                 rs.getLong("fileSize")
                         ))
         );
+    }
+
+    @Override
+    public void deleteByPostIdAndCategory(long postId, String category) {
+        jdbcTemplate.update("DELETE FROM `Photo` WHERE `postId` = ? AND `Category` = ?", postId, category);
     }
 }

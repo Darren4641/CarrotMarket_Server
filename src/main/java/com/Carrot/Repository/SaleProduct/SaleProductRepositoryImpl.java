@@ -2,6 +2,7 @@ package com.Carrot.Repository.SaleProduct;
 
 import com.Carrot.CR_Model.SaleProduct;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,7 +22,7 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public long save(SaleProduct saleProduct) {
+    public int save(SaleProduct saleProduct) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO `saleProduct` (`id`, `title`, `category`, `price`, `content`, `status`, `createDate`, `updateDate`, `love`)" +
@@ -38,7 +39,7 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
             return preparedStatement;
         };
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
-        return keyHolder.getKey().longValue();
+        return keyHolder.getKey().intValue();
     }
 
     @Override
@@ -108,30 +109,35 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
     }
 
     @Override
-    public Optional<SaleProduct> findById(long postId) {
-        return jdbcTemplate.queryForObject(
-                "SELECT * FROM `saleProduct` WHERE `postId` = ?",
-                new Object[]{postId},
-                (rs, rowNum) ->
-                        Optional.of(new SaleProduct(
-                                rs.getInt("postId"),
-                                rs.getString("id"),
-                                rs.getString("title"),
-                                rs.getString("category"),
-                                rs.getInt("price"),
-                                rs.getString("content"),
-                                rs.getString("status"),
-                                rs.getTimestamp("createDate"),
-                                rs.getTimestamp("updateDate"),
-                                rs.getInt("love"),
-                                null,
-                                null
-                        ))
-        );
+    public Optional<SaleProduct> findById(int postId) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM `saleProduct` WHERE `postId` = ?",
+                    new Object[]{postId},
+                    (rs, rowNum) ->
+                            Optional.of(new SaleProduct(
+                                    rs.getInt("postId"),
+                                    rs.getString("id"),
+                                    rs.getString("title"),
+                                    rs.getString("category"),
+                                    rs.getInt("price"),
+                                    rs.getString("content"),
+                                    rs.getString("status"),
+                                    rs.getTimestamp("createDate"),
+                                    rs.getTimestamp("updateDate"),
+                                    rs.getInt("love"),
+                                    null,
+                                    null
+                            ))
+            );
+        } catch(EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+
     }
 
     @Override
-    public Optional<SaleProduct> findByIdJoinPhoto(long postId) {
+    public Optional<SaleProduct> findByIdJoinPhoto(int postId) {
         return jdbcTemplate.queryForObject(
                 "SELECT * from saleProduct AS sale JOIN Photo AS photo ON sale.postId = photo.postId WHERE sale.postId = ? LIMIT 1",
                 new Object[]{postId},

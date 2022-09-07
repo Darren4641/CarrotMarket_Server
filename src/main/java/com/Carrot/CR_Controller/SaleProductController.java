@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -53,26 +54,47 @@ public class SaleProductController{
                 .love(0).build();
 
         SaleProduct sale = saleProductService.write(saleProduct);
+        if(files != null) {
+            List<Photo_SaleProduct> photo_saleProductList = Arrays.asList(files)
+                    .stream()
+                    .map(file -> fileUploadDownloadService.storeFile(file, "saleProduct", id, sale.getPostId()))
+                    .collect(Collectors.toList());
+        }else {
+            fileUploadDownloadService.storeFile(null, "saleProduct", id, sale.getPostId());
+        }
 
-        List<Photo_SaleProduct> photo_saleProductList = Arrays.asList(files)
-                .stream()
-                .map(file -> fileUploadDownloadService.storeFile(file, "saleProduct", id, sale.getPostId()))
-                .collect(Collectors.toList());
 
 
-        return saleProductService.findById(sale.getPostId());
+        return saleProductService.findByIdWithFile(sale.getPostId());
     }
 
-    @PostMapping("/p1/update")
-    public SaleProduct update(HttpServletRequest request, @RequestBody Map<String, String> post) {
+    @PostMapping(value = "/p1/update/{postId}", consumes = { MediaType.ALL_VALUE, MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public ApiResponse update(HttpServletRequest request, @PathVariable(name = "postId") int postId, @RequestPart Map<String, String> post, @RequestPart(required = false) MultipartFile[] files) {
+        String id = getUserInfo(request);
+        SaleProduct origin_saleProduct = saleProductService.findSaleProduct(postId);
         SaleProduct saleProduct = SaleProduct.builder()
-                .id(getUserInfo(request))
+                .postId(postId)
+                .id(id)
                 .title(post.get("title"))
                 .category(post.get("category"))
                 .price(Integer.parseInt(post.get("price")))
                 .content(post.get("content"))
-                .status(post.get("status")).build();
-        return saleProductService.update(saleProduct);
+                .status(post.get("status"))
+                .createDate(origin_saleProduct.getCreateDate())
+                .updateDate(origin_saleProduct.getUpdateDate())
+                .love(Integer.parseInt(post.get("love"))).build();
+
+        saleProductService.update(saleProduct);
+        if(files != null) {
+            List<Photo_SaleProduct> photo_saleProductList = Arrays.asList(files)
+                    .stream()
+                    .map(file -> fileUploadDownloadService.updateFile(file, "saleProduct", id, postId))
+                    .collect(Collectors.toList());
+        }else {
+            fileUploadDownloadService.updateFile(null, "saleProduct", id, postId);
+        }
+
+        return saleProductService.findByIdWithFile(postId);
     }
 
     @GetMapping("/list/{page}")
@@ -86,7 +108,7 @@ public class SaleProductController{
 
     @GetMapping("/view/{postId}")
     public ApiResponse getPost(@PathVariable(name = "postId") int postId) {
-        return saleProductService.findById(postId);
+        return saleProductService.findByIdWithFile(postId);
     }
 
     private int getLimitCnt(int pageNum) {

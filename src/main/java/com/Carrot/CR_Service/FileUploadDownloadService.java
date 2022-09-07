@@ -24,7 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Objects;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -45,36 +45,31 @@ public class FileUploadDownloadService {
 
     public Photo_SaleProduct storeFile(MultipartFile file, String category, String id, int postId) {
 
-        if(file == null) {
-            Photo_SaleProduct photo_saleProduct = buildPhoto(
+        Photo_SaleProduct photo_saleProduct;
+        if(file == null)
+            photo_saleProduct = buildPhoto(
                     id, category, postId, "null", "null", "null", "null", 0);
-            photoRepository.save(photo_saleProduct);
-            return photo_saleProduct;
-        }
-        String originFileName = file.getOriginalFilename();
-        String fileName = StringUtils.cleanPath(getUUIDFileName(file.getOriginalFilename()));
+        else
+            photo_saleProduct = uploadFile(file, category, id, postId);
 
-        try {
-            if(fileName.contains(".."))
-                throw new FileUploadException("File Name is not visible");
-            Path targetLocation = this.fileLocation.resolve(fileName);
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            String filePath = targetLocation.toString();
-            File FileOfFilePath = new File(filePath);
-            long bytes = (FileOfFilePath.length() / 1024);
-            String uuidFileName = FileOfFilePath.getName();
-            String fileDownloadUri = getFileDownloadUri("/downloadFile/", uuidFileName);
+        photoRepository.save(photo_saleProduct);
 
-            Photo_SaleProduct photo_saleProduct = buildPhoto(
-                    id, category, postId, originFileName, uuidFileName, filePath, fileDownloadUri, bytes);
+        return photo_saleProduct;
+    }
 
-            photoRepository.save(photo_saleProduct);
-            return photo_saleProduct;
+    public Photo_SaleProduct updateFile(MultipartFile file, String category, String id, int postId) {
 
-        } catch(Exception e) {
-            e.printStackTrace();
-            throw new FileUploadException("["+fileName+"] File upload failed");
-        }
+        Photo_SaleProduct photo_saleProduct;
+        deleteFile(postId, category);
+        if(file == null)
+            photo_saleProduct = buildPhoto(
+                    id, category, postId, "null", "null", "null", "null", 0);
+        else
+            photo_saleProduct = uploadFile(file, category, id, postId);
+
+        photoRepository.save(photo_saleProduct);
+
+        return photo_saleProduct;
     }
 
     public ResponseEntity<Resource> loadFileAsResource(HttpServletRequest request, String fileName) {
@@ -137,5 +132,38 @@ public class FileUploadDownloadService {
                 .filePath(filePath)
                 .fileDownloadPath(fileDownloadUri)
                 .fileSize(bytes).build();
+    }
+
+    private Photo_SaleProduct uploadFile(MultipartFile file, String category, String id, int postId) {
+        String originFileName = file.getOriginalFilename();
+        String fileName = StringUtils.cleanPath(getUUIDFileName(originFileName));
+        try {
+            if(fileName.contains(".."))
+                throw new FileUploadException("File Name is not visible");
+            Path targetLocation = this.fileLocation.resolve(fileName);
+            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            String filePath = targetLocation.toString();
+            File FileOfFilePath = new File(filePath);
+            long bytes = (FileOfFilePath.length() / 1024);
+            String uuidFileName = FileOfFilePath.getName();
+            String fileDownloadUri = getFileDownloadUri("/downloadFile/", uuidFileName);
+
+            return buildPhoto(
+                    id, category, postId, originFileName, uuidFileName, filePath, fileDownloadUri, bytes);
+        } catch(Exception e) {
+            e.printStackTrace();
+            throw new FileUploadException("["+fileName+"] File upload failed");
+        }
+    }
+
+    private void deleteFile(long postId, String category) {
+        List<Photo_SaleProduct> photo_saleProductList = photoRepository.findByPostIdAndCategory(postId, category);
+
+        for(Photo_SaleProduct list : photo_saleProductList) {
+            File listOfFile = new File(list.getFilePath());
+            if(listOfFile.exists())
+                listOfFile.delete();
+            photoRepository.deleteByPostIdAndCategory(postId, category);
+        }
     }
 }
