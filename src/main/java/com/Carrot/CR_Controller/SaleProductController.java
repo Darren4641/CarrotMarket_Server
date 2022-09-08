@@ -95,6 +95,7 @@ public class SaleProductController{
         }
 
         return saleProductService.findByIdWithFile(postId);
+        //CI TEST
     }
 
     @GetMapping("/list/{page}")
