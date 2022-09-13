@@ -31,6 +31,7 @@ public class FileController {
                 .map(file -> uploadFile(file, id, postId))
                 .collect(Collectors.toList());
 
+
         return photo_saleProductList;
 
     }
