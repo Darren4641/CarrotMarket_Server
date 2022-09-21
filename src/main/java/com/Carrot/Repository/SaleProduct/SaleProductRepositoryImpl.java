@@ -25,8 +25,8 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
     public int save(SaleProduct saleProduct) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO `saleProduct` (`id`, `title`, `category`, `price`, `content`, `status`, `createDate`, `updateDate`, `love`)" +
-                    "VALUES (?,?,?,?,?,?,?,?,0)", new String[]{"postId"});
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO `saleProduct` (`id`, `title`, `category`, `price`, `content`, `status`, `createDate`, `updateDate`)" +
+                    "VALUES (?,?,?,?,?,?,?,?)", new String[]{"postId"});
             preparedStatement.setString(1, saleProduct.getId());
             preparedStatement.setString(2, saleProduct.getTitle());
             preparedStatement.setString(3, saleProduct.getCategory());
@@ -44,7 +44,7 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
 
     @Override
     public int update(int postId, SaleProduct saleProduct) {
-        return jdbcTemplate.update("UPDATE `saleProduct` SET `id` = ?, `title` = ?, `category` = ?, `price` = ?, `content` = ?, `status` = ?, `createDate` = ?, `updateDate` = ?, `love` = ? WHERE `postId` = ?",
+        return jdbcTemplate.update("UPDATE `saleProduct` SET `id` = ?, `title` = ?, `category` = ?, `price` = ?, `content` = ?, `status` = ?, `createDate` = ?, `updateDate` = ? WHERE `postId` = ?",
                 saleProduct.getId(),
                 saleProduct.getTitle(),
                 saleProduct.getCategory(),
@@ -53,7 +53,6 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
                 saleProduct.getStatus(),
                 saleProduct.getCreateDate(),
                 saleProduct.getUpdateDate(),
-                saleProduct.getLove(),
                 postId);
     }
 
@@ -72,7 +71,6 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
                                 rs.getString("status"),
                                 rs.getTimestamp("createDate"),
                                 rs.getTimestamp("updateDate"),
-                                rs.getInt("love"),
                                 rs.getString("filePath"),
                                 rs.getString("fileDownloadPath")
                         )
@@ -82,7 +80,7 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
     @Override
     public List<SaleProduct> findPageCount(int limit, int offset) {
         List<SaleProduct> results = jdbcTemplate.query(
-                "SELECT distinct sale.postId, sale.id, sale.title, sale.category, sale.price, sale.price, sale.content, sale.`status`, sale.createDate, sale.updateDate, sale.love, photo.filePath, photo.fileDownloadPath " +
+                "SELECT distinct sale.postId, sale.id, sale.title, sale.category, sale.price, sale.price, sale.content, sale.`status`, sale.createDate, sale.updateDate, photo.filePath, photo.fileDownloadPath " +
                         "from saleProduct AS sale JOIN Photo AS photo ON sale.postId = photo.postId " +
                         "GROUP BY sale.postId " +
                         "ORDER BY updateDate DESC LIMIT ? OFFSET ?",
@@ -99,7 +97,6 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
                                 rs.getString("status"),
                                 rs.getTimestamp("createDate"),
                                 rs.getTimestamp("updateDate"),
-                                rs.getInt("love"),
                                 rs.getString("filePath"),
                                 rs.getString("fileDownloadPath"));
                                 return saleProduct;
@@ -125,7 +122,6 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
                                     rs.getString("status"),
                                     rs.getTimestamp("createDate"),
                                     rs.getTimestamp("updateDate"),
-                                    rs.getInt("love"),
                                     null,
                                     null
                             ))
@@ -152,7 +148,6 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
                                 rs.getString("status"),
                                 rs.getTimestamp("createDate"),
                                 rs.getTimestamp("updateDate"),
-                                rs.getInt("love"),
                                 rs.getString("filePath"),
                                 rs.getString("fileDownloadPath")
                         ))

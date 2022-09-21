@@ -2,6 +2,8 @@ package com.Carrot.CR_Service;
 
 import com.Carrot.CR_Model.SaleProduct;
 import com.Carrot.ErrorHandler.ApiResponse;
+import com.Carrot.Repository.Like.LikeRepository;
+import com.Carrot.Repository.Like.LikeRepositoryImpl;
 import com.Carrot.Repository.PhotoRepository.PhotoRepository;
 import com.Carrot.Repository.PhotoRepository.PhotoRepositoryImpl;
 import com.Carrot.Repository.SaleProduct.SaleProductRepository;
@@ -16,10 +18,12 @@ public class SaleProductService {
 
     private final SaleProductRepository saleProductRepository;
     private final PhotoRepository photoRepository;
+    private final LikeRepository likeRepository;
     @Autowired
-    public SaleProductService(SaleProductRepositoryImpl saleProductRepository, PhotoRepositoryImpl photoRepository) {
+    public SaleProductService(SaleProductRepositoryImpl saleProductRepository, PhotoRepositoryImpl photoRepository, LikeRepositoryImpl likeRepository) {
         this.saleProductRepository = saleProductRepository;
         this.photoRepository = photoRepository;
+        this.likeRepository = likeRepository;
     }
 
     public SaleProduct write(SaleProduct saleProduct) {
@@ -39,6 +43,7 @@ public class SaleProductService {
         if(Op_saleProduct.isPresent()) {
             SaleProduct saleProduct = Op_saleProduct.get();
             saleProduct.setFile(photoRepository.findByPostIdAndCategory(postId, "saleProduct"));
+            saleProduct.setLike(likeRepository.countOfLike(postId, "saleProduct"));
             result.setResult(saleProduct);
         }
         return result;

@@ -20,12 +20,13 @@ public class SaleProduct {
     private String status;
     private Timestamp createDate;
     private Timestamp updateDate;
-    private int love;
     private String filePath;
     private String fileDownloadPath;
     private List<Photo_SaleProduct> file;
+    private int like;
 
-    public SaleProduct(int postId, String id, String title, String category, int price, String content, String status, Timestamp createDate, Timestamp updateDate, int love, String filePath, String fileDownloadPath) {
+
+    public SaleProduct(int postId, String id, String title, String category, int price, String content, String status, Timestamp createDate, Timestamp updateDate, String filePath, String fileDownloadPath) {
         this.postId = postId;
         this.id = id;
         this.title = title;
@@ -35,7 +36,6 @@ public class SaleProduct {
         this.status = status;
         this.createDate = createDate;
         this.updateDate = updateDate;
-        this.love = love;
         this.filePath = filePath;
         this.fileDownloadPath = fileDownloadPath;
     }

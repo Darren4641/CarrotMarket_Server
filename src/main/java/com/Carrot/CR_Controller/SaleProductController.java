@@ -35,11 +35,12 @@ public class SaleProductController{
         this.fileUploadDownloadService = fileUploadDownloadService;
     }
 
-    public String getUserInfo(HttpServletRequest request) {
+    private String getUserInfo(HttpServletRequest request) {
         String token = jwtTokenProvider.getAccessToken(request);
         return jwtTokenProvider.getUserPk(token);
     }
 
+    //게시물 작성
     @PostMapping(value = "/p1/write", consumes = { MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public ApiResponse write(HttpServletRequest request, @RequestPart Map<String, String> post, @RequestPart(required = false) MultipartFile[] files) {
         String id = getUserInfo(request);
@@ -50,8 +51,7 @@ public class SaleProductController{
                 .category(post.get("category"))
                 .price(Integer.parseInt(post.get("price")))
                 .content(post.get("content"))
-                .status(post.get("status"))
-                .love(0).build();
+                .status(post.get("status")).build();
 
         SaleProduct sale = saleProductService.write(saleProduct);
         if(files != null) {
@@ -62,12 +62,10 @@ public class SaleProductController{
         }else {
             fileUploadDownloadService.storeFile(null, "saleProduct", id, sale.getPostId());
         }
-
-
-
         return saleProductService.findByIdWithFile(sale.getPostId());
     }
 
+    //게시물 수정
     @PostMapping(value = "/p1/update/{postId}", consumes = { MediaType.ALL_VALUE, MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public ApiResponse update(HttpServletRequest request, @PathVariable(name = "postId") int postId, @RequestPart Map<String, String> post, @RequestPart(required = false) MultipartFile[] files) {
         String id = getUserInfo(request);
@@ -81,8 +79,7 @@ public class SaleProductController{
                 .content(post.get("content"))
                 .status(post.get("status"))
                 .createDate(origin_saleProduct.getCreateDate())
-                .updateDate(origin_saleProduct.getUpdateDate())
-                .love(Integer.parseInt(post.get("love"))).build();
+                .updateDate(origin_saleProduct.getUpdateDate()).build();
 
         saleProductService.update(saleProduct);
         if(files != null) {
@@ -95,9 +92,10 @@ public class SaleProductController{
         }
 
         return saleProductService.findByIdWithFile(postId);
-        //CI TEST
     }
 
+
+    //게시물 10개씩 보기
     @GetMapping("/list/{page}")
     public ApiResponse show(@PathVariable(name = "page") int pageNum) {
         //무한 스크롤
@@ -107,6 +105,7 @@ public class SaleProductController{
 
     }
 
+    //게시물 보기
     @GetMapping("/view/{postId}")
     public ApiResponse getPost(@PathVariable(name = "postId") int postId) {
         return saleProductService.findByIdWithFile(postId);
