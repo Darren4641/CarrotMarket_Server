@@ -82,4 +82,17 @@ public class LikeRepositoryImpl implements LikeRepository{
         }
 
     }
+
+    @Override
+    public int countOfLikeById(int postId, String category, String id) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT COUNT(*) FROM `carrotsql`.`like` WHERE `postId` = ? AND `category` = ? AND `id` = ?",
+                    new Object[]{postId, category, id},
+                    (rs, rowNum) -> Optional.of(rs.getInt(1))).get();
+
+        } catch(EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
 }

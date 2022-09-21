@@ -10,4 +10,5 @@ public interface LikeRepository {
     int update(Like like);
     List<Like> findByPostIdAndCategory(int postId, String category);
     int countOfLike(int postId, String category);
+    int countOfLikeById(int postId, String category, String id);
 }

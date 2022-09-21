@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +61,7 @@ public class SaleProductController{
         }else {
             fileUploadDownloadService.storeFile(null, "saleProduct", id, sale.getPostId());
         }
-        return saleProductService.findByIdWithFile(sale.getPostId());
+        return saleProductService.findByIdWithFileAndLike(sale.getPostId());
     }
 
     //게시물 수정
@@ -91,7 +90,7 @@ public class SaleProductController{
             fileUploadDownloadService.updateFile(null, "saleProduct", id, postId);
         }
 
-        return saleProductService.findByIdWithFile(postId);
+        return saleProductService.findByIdWithFileAndLike(postId);
     }
 
 
@@ -108,7 +107,7 @@ public class SaleProductController{
     //게시물 보기
     @GetMapping("/view/{postId}")
     public ApiResponse getPost(@PathVariable(name = "postId") int postId) {
-        return saleProductService.findByIdWithFile(postId);
+        return saleProductService.findByIdWithFileAndLike(postId);
     }
 
     private int getLimitCnt(int pageNum) {

@@ -37,7 +37,7 @@ public class SaleProductService {
         return result ? saleProductRepository.findById(status).get() : null;
     }
 
-    public ApiResponse findByIdWithFile(int postId) {
+    public ApiResponse findByIdWithFileAndLike(int postId) {
         ApiResponse.ResponseMap result = new ApiResponse.ResponseMap();
         Optional<SaleProduct> Op_saleProduct = saleProductRepository.findById(postId);
         if(Op_saleProduct.isPresent()) {
@@ -48,6 +48,23 @@ public class SaleProductService {
         }
         return result;
     }
+
+    public ApiResponse pushLike(int postId, String id) {
+        ApiResponse.ResponseMap result = new ApiResponse.ResponseMap();
+        boolean validate = (validateLike(postId, id) != 0);
+        if(validate) {
+            //delete
+        }else {
+            //insert
+        }
+        return result;
+    }
+
+    public int validateLike(int postId, String id) {
+        return likeRepository.countOfLikeById(postId, "saleProduct", id);
+    }
+
+
 
     public SaleProduct findSaleProduct(int postId) {
         Optional<SaleProduct> saleProduct = saleProductRepository.findById(postId);
