@@ -41,6 +41,12 @@ public class LikeRepositoryImpl implements LikeRepository{
     }
 
     @Override
+    public int delete(Like like) {
+        return jdbcTemplate.update("DELETE FROM `like` WHERE `postId` = ? AND `category` = ? AND `id` = ?"
+        ,like.getPostId(), like.getCategory(), like.getId());
+    }
+
+    @Override
     public int update(Like like) {
         return jdbcTemplate.update("UPDATE `carrotsql`.`like` SET `id` = ?, `category` = ?,`postId` = ?, `isLike` = ? WHERE `likeId` = ?",
                 like.getId(),

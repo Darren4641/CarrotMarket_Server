@@ -94,6 +94,13 @@ public class SaleProductController{
     }
 
 
+    @GetMapping(value = "/p1/like/{postId}")
+    public void pushLike(HttpServletRequest request, @PathVariable(name = "postId") int postId) {
+        String id = getUserInfo(request);
+        saleProductService.pushLike(postId, id);
+        System.out.println("Like");
+    }
+
     //게시물 10개씩 보기
     @GetMapping("/list/{page}")
     public ApiResponse show(@PathVariable(name = "page") int pageNum) {

@@ -1,5 +1,6 @@
 package com.Carrot.CR_Service;
 
+import com.Carrot.CR_Model.Like;
 import com.Carrot.CR_Model.SaleProduct;
 import com.Carrot.ErrorHandler.ApiResponse;
 import com.Carrot.Repository.Like.LikeRepository;
@@ -49,15 +50,21 @@ public class SaleProductService {
         return result;
     }
 
-    public ApiResponse pushLike(int postId, String id) {
+    public void pushLike(int postId, String id) {
         ApiResponse.ResponseMap result = new ApiResponse.ResponseMap();
+        Like like = Like.builder()
+                .id(id)
+                .category("saleProduct")
+                .postId(postId)
+                .isLike(1).build();
         boolean validate = (validateLike(postId, id) != 0);
         if(validate) {
             //delete
+            likeRepository.delete(like);
         }else {
             //insert
+            likeRepository.save(like);
         }
-        return result;
     }
 
     public int validateLike(int postId, String id) {
