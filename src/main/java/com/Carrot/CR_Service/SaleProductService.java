@@ -51,7 +51,6 @@ public class SaleProductService {
     }
 
     public void pushLike(int postId, String id) {
-        ApiResponse.ResponseMap result = new ApiResponse.ResponseMap();
         Like like = Like.builder()
                 .id(id)
                 .category("saleProduct")
@@ -69,6 +68,18 @@ public class SaleProductService {
 
     public int validateLike(int postId, String id) {
         return likeRepository.countOfLikeById(postId, "saleProduct", id);
+    }
+
+    public ApiResponse pullUpPost(int postId, String id) {
+        ApiResponse.ResponseMap result = new ApiResponse.ResponseMap();
+        Optional<SaleProduct> saleProduct = saleProductRepository.findById(postId);
+        if(saleProduct.isPresent() && saleProduct.get().getId().equals(id)) {
+            saleProductRepository.updateForUpdateDate(postId);
+            return findByIdWithFileAndLike(postId);
+        }else {
+            result.setResult("No Search Post");
+        }
+        return result;
     }
 
 

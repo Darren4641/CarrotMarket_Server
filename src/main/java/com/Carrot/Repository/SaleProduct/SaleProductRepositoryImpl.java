@@ -57,6 +57,12 @@ public class SaleProductRepositoryImpl implements SaleProductRepository{
     }
 
     @Override
+    public int updateForUpdateDate(int postId) {
+        return jdbcTemplate.update("UPDATE `saleProduct` SET `updateDate` = ? WHERE `postId` = ?",
+                getTime(), postId);
+    }
+
+    @Override
     public List<SaleProduct> findAll() {
         return jdbcTemplate.query(
                 "SELECT * from saleProduct AS sale JOIN Photo AS photo ON sale.postId = photo.postId ORDER BY sale.updateDate DESC",

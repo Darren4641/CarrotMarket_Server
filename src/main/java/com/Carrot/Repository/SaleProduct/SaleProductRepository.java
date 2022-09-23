@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface SaleProductRepository {
     int save(SaleProduct saleProduct);
     int update(int postId, SaleProduct saleProduct);
+    int updateForUpdateDate(int postId);
     List<SaleProduct> findAll();
     Optional<SaleProduct> findById(int postId);
     Optional<SaleProduct> findByIdJoinPhoto(int postId);

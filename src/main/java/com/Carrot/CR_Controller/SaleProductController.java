@@ -93,12 +93,18 @@ public class SaleProductController{
         return saleProductService.findByIdWithFileAndLike(postId);
     }
 
-
+    //좋아요
     @GetMapping(value = "/p1/like/{postId}")
     public void pushLike(HttpServletRequest request, @PathVariable(name = "postId") int postId) {
         String id = getUserInfo(request);
         saleProductService.pushLike(postId, id);
-        System.out.println("Like");
+    }
+
+    //끌어 올리기
+    @GetMapping(value = "/p1/pullup/{postId}")
+    public ApiResponse pullUp(HttpServletRequest request, @PathVariable(name = "postId") int postId) {
+        String id = getUserInfo(request);
+        return saleProductService.pullUpPost(postId, id);
     }
 
     //게시물 10개씩 보기
