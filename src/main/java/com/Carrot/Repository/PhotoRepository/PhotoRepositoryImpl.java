@@ -1,7 +1,6 @@
 package com.Carrot.Repository.PhotoRepository;
 
 import com.Carrot.CR_Model.Photo_SaleProduct;
-import com.Carrot.CR_Model.SaleProduct;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;

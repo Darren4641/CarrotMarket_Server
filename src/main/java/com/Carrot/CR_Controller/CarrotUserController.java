@@ -21,6 +21,7 @@ public class CarrotUserController {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
+
     @PostMapping("/join")
     public ApiResponse signUp(@RequestBody Map<String, String> user) {
         Role role = Role.from(user.get("role"));

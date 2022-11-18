@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+<script src="/js/main.js"></script>
+<script th:inline="javascript">
+
+   /* function windowPopup(reciveid) {
+        var popUrl = "http://localhost:8080?id="+reciveid;
+        var popOption = "top=10, left=10, width=500, height=600, status=no, menubar=no, toolbar=no, resizable=no";
+        //window.open(popUrl, popOption);
+        axios({
+            method: 'get',
+            url: popUrl,
+        }).then(response=> {
+            location.href = popUrl;
+        }).catch(error=> {
+            console.log(error);
+        })
+    }*/
+    function Go(title) {
+        location.href="/chat/chatting/"+title;
+    }
+</script>
+<body>
+<table id="userTable">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>password</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${userList}">
+        <td th:id="${user.id}" th:text="${user.id}" >id</td>
+        <td th:text="${user.password}">password</td>
+        <td th:title="${user.title}" th:myId="${session.myId}" th:text="${user.title}" th:onclick="Go(this.getAttribute('myId') + '_' + this.getAttribute('title'))">title</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -30,6 +30,11 @@ dependencies {
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.webjars.bower:axios:0.17.1'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'javax.servlet:jstl'
+    implementation "org.apache.tomcat.embed:tomcat-embed-jasper"
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.5.2'

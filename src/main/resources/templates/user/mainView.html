@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/user.css" />
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+<script>
+    var accTK = localStorage.getItem("accessToken");
+</script>
+<body>
+<p>${accTK}</p>
+<button onClick="location.href='/carrot/loginForm'">로그인</button>
+<button onClick="location.href='/carrot/signupForm'">회원가입</button>
+</body>
+</html>
